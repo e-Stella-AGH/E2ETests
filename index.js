@@ -1,23 +1,6 @@
 import { Selector, Role } from 'testcafe';
+import { loginAsHr } from './auth/logins';
 
-// fixture `Getting Started`
-//     .page `https://devexpress.github.io/testcafe/example/`;
-
-// test("My first test", async t => {
-//     await t
-//         .typeText('#developer-name', 'Peter Parker')
-//         .click('#submit-button')
-//         .expect(Selector('.result-content').find('h1').innerText).eql("Thank you, Peter Parker!")
-// })
-
-const loginAsHr = async t => {
-    await t
-        .click(Selector('#loginButton').withText('LOGIN'))
-        .typeText(Selector('input[name=login]'), "principus@roma.com")
-        .typeText(Selector('input[name=password]'), "a")
-        .click(Selector('button[type=submit]').withText('LOGIN'))
-        .click(Selector('button').withText('OK'))
-}
 
 const addSkill = async t => {
     await t
@@ -60,20 +43,6 @@ const deleteOffer = async t => {
 fixture `E-Stella`
     .page `https://e-stella-agh.github.io/MainFrontApp/#/`;
 
-test("HR log in test", async t => {
-    await t
-        .click(Selector('#loginButton').withText('LOGIN'))
-        .typeText(Selector('input[name=login]'), "principus@roma.com")
-        .typeText(Selector('input[name=password]'), "a")
-        .click(Selector('button[type=submit]').withText('LOGIN'))
-        .expect(Selector('#swal2-title').innerText).eql("Successfully logged in!")
-        //close swal
-        .click(Selector('button').withText('OK'))
-        //logout
-        .click(Selector('.MuiAvatar-root'))
-        .click(Selector('.MuiListItem-root').withText('Logout'))
-
-})
 
 test("Should be able to create offer as HR and then delete it", async t => {
 
