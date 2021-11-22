@@ -23,8 +23,9 @@ async function setStages({t, stages}) {
 
     for (let stage of stages) {
         const target = await getCurrStagesSelector().child(-1)
-        await t.dragToElement(getStagesToSetSelector().child(div => div.textContent === stage, {stage}), target)
-        await t.click(Selector('button').withText("OK"))
+        await t
+            .dragToElement(getStagesToSetSelector().child(div => div.textContent === stage, {stage}), target)
+            .click(Selector('button').withText("OK"))
     }
 }
 
@@ -35,7 +36,6 @@ async function pickDate(t, date, selector) {
         .click(selector
             .find('button')
             .withText('SCHEDULE'))
-        .click(Selector('button').withText('OK'))
         .click(Selector('button').withText('OK'))
 }
 
@@ -51,20 +51,16 @@ export const startProcess = async ({
         .click(Selector('button').withText('OFFER MENU'))
         .click(Selector('button').withText('EDIT PROCESS'))
     await setStages({t, stages});
-    if (endDate) {
-        await pickDate(t, endDate, getEndDateSelector())
-    }
+
+    endDate && await pickDate(t, endDate, getEndDateSelector())
+
     if (startDate) {
         await pickDate(t, startDate, getStartDateSelector())
+        await t.click(Selector('button').withText('OK'))
     } else {
         await t
             .click(Selector('button').withText('START '))
             .click(Selector('button').withText('OK'))
             .click(Selector('button').withText('OK'))
     }
-
-
-
-
-
 }
