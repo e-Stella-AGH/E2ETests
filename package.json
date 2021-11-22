@@ -21,5 +21,9 @@
     "dotenv": "^10.0.0",
     "testcafe": "^1.17.0",
     "uuidv4": "^6.2.12"
+  },
+  "devDependencies": {
+    "mailslurp": "^0.0.1-security",
+    "mailslurp-client": "^15.0.2"
   }
 }

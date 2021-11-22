@@ -15,7 +15,7 @@ export const loginAsHr = async ({t, login="principus@roma.com", password="a"}) =
         .click(Selector('button[type=submit]').withText('LOGIN'))
 }
 
-export const regiesterJobSeeker = async ({t, login = process.env.USER_MAIL, password = process.env.USER_PASSWORD, name = process.env.USER_NAME, surname = process.env.USER_SURNAME}) => {
+export const registerJobSeeker = async ({t, login = process.env.USER_MAIL, password = process.env.USER_PASSWORD, name = process.env.USER_NAME || 'name', surname = process.env.USER_SURNAME || 'surname'}) => {
 
     await t
         .click(Selector('button').withText('REGISTER'))
