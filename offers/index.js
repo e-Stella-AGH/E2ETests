@@ -13,7 +13,6 @@ test("Should be able to create offer as HR and then delete it", async t => {
     await loginAsHr({ t })
 
     await t
-        .click(Selector('button').withText('OK'))
         .click(Selector('.MuiAvatar-root'))
         .click(Selector('.MuiListItem-root').withText('Create offer'))
         

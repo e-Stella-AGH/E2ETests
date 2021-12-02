@@ -5,7 +5,7 @@ then
     if [ "$dir" != "node_modules" ] && [ "$dir" != "commons" ]
     then
       echo "${dir}/"
-      testcafe chrome "${dir}/index.js"
+      testcafe chromium "${dir}/index.js"
     fi
   done
 else
@@ -13,7 +13,7 @@ else
       if [ "$d" != "node_modules/" ] && [ "$dir" != "commons" ]
       then
           echo "${d}"
-          testcafe chrome "${d}index.js"
+          testcafe chromium "${d}index.js"
       fi
   done
 fi

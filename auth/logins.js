@@ -13,6 +13,7 @@ export const loginAsHr = async ({t, login="principus@roma.com", password="a"}) =
         .typeText(Selector('input[name=login]'), login)
         .typeText(Selector('input[name=password]'), password)
         .click(Selector('button[type=submit]').withText('LOGIN'))
+        .click(Selector('button').withText('OK'))
 }
 
 export const registerJobSeeker = async ({t, login = process.env.USER_MAIL, password = process.env.USER_PASSWORD, name = process.env.USER_NAME || 'name', surname = process.env.USER_SURNAME || 'surname'}) => {

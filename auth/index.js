@@ -9,8 +9,6 @@ fixture `login tests`
 test("HR log in test", async t => {
     await loginAsHr({ t })
 
-    await t.click(Selector('button').withText('OK'))
-
     await logout(t)
 
 })
