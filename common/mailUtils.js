@@ -3,6 +3,7 @@ import {MailSlurp} from "mailslurp-client";
 let apiKey
 let mailslurp
 let inboxes
+global.FormData = require('form-data');
 
 async function startService() {
     apiKey = process.env.MAILSLURP_API_KEY
@@ -30,11 +31,13 @@ export const getHostBEmailAddress = async () => {
 
 export const getNextMail = async (address) =>{
     if (!apiKey && !mailslurp && !inboxes) await startService()
-    const inbox = inboxes.filter(inbox => inbox.emailAddress === address)[0]
-    return await mailslurp.waitController.waitForLatestEmail({
+    const inbox = Object.values(inboxes).filter(inbox => inbox.emailAddress === address)[0]
+    const mail = await mailslurp.waitController.waitForLatestEmail({
         inboxId: inbox.id,
         timeout: 30000,
         unreadOnly: true
     })
+    console.log(mail)
+    return mail
 }
 

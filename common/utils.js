@@ -9,7 +9,6 @@ export const addNote = async ({t, tags, note}) => {
         .click(Selector(".MuiDrawer-paper").filter((el, _) => el.textContent === "").find("svg"))
         .click(Selector(".MuiGrid-root.MuiGrid-container").find("svg"))
     for (let tag of tags) {
-        console.log(tag)
         await t
             .typeText(Selector(".MuiCard-root.MuiCard-root").find("input"), tag)
             .click(Selector(".MuiCard-root.MuiCard-root").find('button').withText(''))

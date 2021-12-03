@@ -45,7 +45,7 @@ export const startProcess = async ({
                                        offerName,
                                        startDate,
                                        endDate,
-                                       stages = ['APPLIED', 'HR_INTERVIEW', 'TECHNICAL_INTERVIEW', 'TASK', 'ENDED']
+                                       stages = ['HR_INTERVIEW', 'TECHNICAL_INTERVIEW', 'TASK']
                                    }) => {
     await openOfferAsHr({t, offerName})
     await t
@@ -73,15 +73,23 @@ export const openApplication = async ({ t, firstName, lastName }) => {
         .click(Selector('.MuiCardContent-root').filter((el, idx) => el.textContent.includes(`${firstName} ${lastName}`), {firstName, lastName}))
 }
 
-export const planMeeting = async ({t, hosts, duration}) => {
+export const planMeeting = async ({t, hosts, duration, hr = false}) => {
     await t
         .click('svg')
+    if (hr) {
+        for (let host of hosts) {
+            await t
+                .click(Selector('input'))
+                .click(Selector('li').withAttribute('data-value', host))
+        }
+    } else {
+        for (let host of hosts) {
+            await t
+                .typeText(Selector('input'), host)
+                .click(Selector('.swal2-popup').find('svg'))
+        }
+    }
 
-    await hosts.forEach(async host => {
-        await t
-            .typeText(Selector('input'), host)
-            .click(Selector('.swal2-popup').find('svg'))
-    })
 
     await t
         .click(nextSelector())
