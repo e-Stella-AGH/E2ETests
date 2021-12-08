@@ -7,7 +7,7 @@ import {
     getStagesToSetSelector,
     getStartDateSelector
 } from "./selectors";
-import {acceptSelector, nextSelector} from "../common/utils";
+import {acceptSelector, buttonSelector, nextSelector} from "../common/utils";
 
 
 async function setStages({t, stages}) {
@@ -104,25 +104,26 @@ export const addNewTask = async ({ t, description, tests, timeLimit }) => {
     await t.click(Selector(".MuiList-root").filter((el, _) => el.textContent === ""))
         .click(Selector(".MuiRadio-root").filter((_, idx) => idx === 1))
         .typeText("textarea", description)
-        .click(Selector("button").withText("NEXT"))
+        .click(nextSelector())
         .click(Selector(".MuiRadio-root").filter((_, idx) => idx === 0))
     await tests.forEach(async test => {
         await t
-            .typeText(Selector("input").filter((_, idx) => idx === 0), test.input)
-            .typeText(Selector("input").filter((_, idx) => idx === 1), test.output)
-            .click(Selector(".swal2-popup").find("svg"))
+            .typeText(Selector(".MuiTextField-root").filter((_, idx) => idx === 0), test.input)
+            .typeText(Selector(".MuiTextField-root").filter((_, idx) => idx === 1), test.output)
+            .click(Selector(".swal2-popup").find('button').withExactText(''))
     })
     await t
-        .click(Selector("button").withText("NEXT"))
+        .click(nextSelector())
         .typeText("input", timeLimit)
-        .click(Selector("button").withText("NEXT"))
+        .click(nextSelector())
+        .click(acceptSelector())
 }
 
 export const solveTask = async ({ t, code }) => {
     await t
-        .click(Selector('button').withText('START'))
-        .click(Selector('button').withText('OK'))
-        .click(Selector('button').withText('TAKE CONTROL'))
+        .click(buttonSelector('start'))
+        .click(acceptSelector())
+        .click(buttonSelector('take control'))
         .typeText('.monaco-mouse-cursor-text', code)
-        .click(Selector('button').withText("SUBMIT"))
+        .click(buttonSelector('submit'))
 }

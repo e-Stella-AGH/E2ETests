@@ -5,6 +5,11 @@ let mailslurp
 let inboxes
 global.FormData = require('form-data');
 
+const startServiceIfNeeded = async () => {
+    if (!apiKey && !mailslurp && !inboxes) await startService()
+}
+
+
 async function startService() {
     apiKey = process.env.MAILSLURP_API_KEY
     mailslurp = new MailSlurp({apiKey})
@@ -15,29 +20,36 @@ async function startService() {
 }
 
 export const getGuestEmailAddress = async () => {
-    if (!apiKey && !mailslurp && !inboxes) await startService()
+    await startServiceIfNeeded();
     return inboxes.guestInbox.emailAddress
 }
 
 export const getHostAEmailAddress = async () => {
-    if (!apiKey && !mailslurp && !inboxes) await startService()
+    await startServiceIfNeeded();
     return inboxes.hostAInbox.emailAddress
 }
 
 export const getHostBEmailAddress = async () => {
-    if (!apiKey && !mailslurp && !inboxes) await startService()
+    await startServiceIfNeeded();
     return inboxes.hostBInbox.emailAddress
 }
 
 export const getNextMail = async (address) =>{
-    if (!apiKey && !mailslurp && !inboxes) await startService()
+    await startServiceIfNeeded();
     const inbox = Object.values(inboxes).filter(inbox => inbox.emailAddress === address)[0]
-    const mail = await mailslurp.waitController.waitForLatestEmail({
-        inboxId: inbox.id,
-        timeout: 30000,
-        unreadOnly: true
-    })
-    console.log(mail)
-    return mail
+    try {
+        const mail = await mailslurp.waitController.waitForLatestEmail({
+            inboxId: inbox.id,
+            timeout: 30000,
+            unreadOnly: true
+        })
+        // console.log(mail)
+        console.log(mail.headers.Subject)
+        return mail
+    } catch (e) {
+        console.log(e.statusText)
+    }
+
 }
+
 
