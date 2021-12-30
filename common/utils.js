@@ -8,13 +8,13 @@ export const addNote = async ({t, tags, note, mail = null}) => {
     await t
         .click(Selector(".MuiDrawer-paper").filter((el, _) => el.textContent === "").find("svg"))
         .click(Selector(".MuiDrawer-docked").find(".MuiGrid-root.MuiGrid-container").find("svg"))
-        .typeText(Selector('.MuiDrawer-docked').find('.rc-md-editor'), note)
     for await (const tag of tags) {
         await t
             .typeText(Selector(".MuiDrawer-docked").find(".MuiCard-root.MuiCard-root").find("input"), tag)
             .click(Selector(".MuiDrawer-docked").find(".MuiCard-root.MuiCard-root").find('button').withText(''))
     }
     await t
+        .typeText(Selector('.MuiDrawer-docked').find('.rc-md-editor'), note)
         .click(buttonSelector('ADD'))
 
         if (mail) {

@@ -10,57 +10,44 @@ import {
     getNextMail
 } from "../common/mailUtils";
 import {acceptSelector, addNote, buttonSelector, nextSelector, refresh} from "../common/utils";
-const createCallsiteRecord = require('callsite-record');
 
-import {
-    addTimeSlotsHostA,
-    addTimeSlotsHostB,
-    guestInterviewInvitationBody,
-    hostInterviewInvitationBody,
-    pickTimeSlotBody
-} from "../common/mailTexts";
-
-
-const code = "n = input()\nprint(n)"
 
 let hostAUrl, hostBUrl, guestUrl, hostAMailAddress, hostBMailAddress, guestMailAddress, hostAMail, hostBMail, guestMail, password;
- // const mainUrl = 'http://localhost:3001/MainFrontApp/#/'
- const mainUrl = 'https://e-stella-agh.github.io/MainFrontApp/#/'
-const offerName = "Sample offer from tests"
-const name = process.env.NAME || 'John'
-const lastName = process.env.SURNAME || 'Doe'
+const mainUrl = 'https://e-stella-agh.github.io/MainFrontApp/#/'
+const offerName = "Sample offer for E2E presentation"
+const code = 'n = input()\nprint(n)'
+const name = 'Jerzy'
+const lastName = 'Kiler'
 
 fixture `E-Stella`
     .page `${mainUrl}`;
 
-// test("Should be able to add hr partners", async t => {
-//     await loginAsHr({t, login: "hr@qualtrics.com"})
-//     hostAMailAddress = await getHostAEmailAddress()
-//     hostBMailAddress = await getHostBEmailAddress()
-//     await t
-//             .click(Selector('.MuiAvatar-root'))
-//             .click(Selector('.MuiListItem-root').withText("Company's partners"))
-//         .typeText(Selector('input'), "HostA")
-//         .typeText(Selector('input').filter((_, idx) => idx === 1), "surname1")
-//         .typeText(Selector('input').filter((_, idx) => idx === 2), hostAMailAddress)
-//         .click(buttonSelector('ADD'))
-//         .click(acceptSelector())
-//         .typeText(Selector('input'), "HostB")
-//         .typeText(Selector('input').filter((_, idx) => idx === 1), "surname2")
-//         .typeText(Selector('input').filter((_, idx) => idx === 2), hostBMailAddress)
-//         .click(buttonSelector('ADD'))
-//         .click(acceptSelector())
-//
-//     await getNextMail(hostAMailAddress)
-//     await getNextMail(hostBMailAddress)
-//
-//     await logout(t)
-// })
+test("Should be able to add hr partners", async t => {
+    await loginAsHr({t, login: process.env.ORG_LOGIN})
+    hostAMailAddress = await getHostAEmailAddress()
+    hostBMailAddress = await getHostBEmailAddress()
+    await t
+            .click(Selector('.MuiAvatar-root'))
+            .click(Selector('.MuiListItem-root').withText("Company's partners"))
+        .typeText(Selector('input'), "HostA")
+        .typeText(Selector('input').filter((_, idx) => idx === 1), "surname1")
+        .typeText(Selector('input').filter((_, idx) => idx === 2), hostAMailAddress)
+        .click(buttonSelector('ADD'))
+        .click(acceptSelector())
+        .typeText(Selector('input'), "HostB")
+        .typeText(Selector('input').filter((_, idx) => idx === 1), "surname2")
+        .typeText(Selector('input').filter((_, idx) => idx === 2), hostBMailAddress)
+        .click(buttonSelector('ADD'))
+        .click(acceptSelector())
+
+    await getNextMail(hostAMailAddress)
+    await getNextMail(hostBMailAddress)
+
+    await logout(t)
+})
 
 
 test("Should be able to start recruitment process", async t => {
-    const offerName = "Sample offer from tests"
-
     await loginAsHr({ t })
 
     await t
@@ -74,10 +61,7 @@ test("Should be able to start recruitment process", async t => {
 
 
 test("Should be able to apply for offer with no user", async t => {
-
-    // const emailAddress = await getGuestEmailAddress()
     guestMailAddress = await getGuestEmailAddress()
-    // guestMailAddress = "trosiek@student.agh.edu.pl"
 
     await t.click(Selector('.MuiPaper-root').withText(offerName))
 
@@ -88,12 +72,8 @@ test("Should be able to apply for offer with no user", async t => {
 })
 
 test("Should be able to schedule a meeting", async t => {
-    const offerName = "Sample offer from tests"
-
     hostAMailAddress = await getHostAEmailAddress()
-    // hostAMailAddress = "tomek@chromat.pl"
     hostBMailAddress = await getHostBEmailAddress()
-    // hostBMailAddress = "trosiek4@gmail.com"
 
     await loginAsHr({ t })
     await openOfferAsHr({ t, offerName })
@@ -132,7 +112,6 @@ test("Should be able to schedule a meeting", async t => {
 test("Should choose two time ranges", async t => {
     await t.navigateTo(hostAUrl)
 
-
     // pick date range (up top and down bottom) - DEV
     const daySelector = Selector('.rbc-time-content').child(-1)
 
@@ -148,14 +127,13 @@ test("Should choose two time ranges", async t => {
 })
 
 
-
 test("Should choose one time range", async t => {
     await t.navigateTo(hostBUrl)
     await t
         .click(acceptSelector())
     const daySelector = Selector('.rbc-time-content').child(-1)
     await t
-        .drag(daySelector.child(2), 0, 200)
+        .drag(daySelector.child(4), 0, 200)
         .click(acceptSelector())
         .click(acceptSelector())
 })
@@ -172,8 +150,6 @@ test("Should be able to pick first date", async t => {
     } catch(e) {
         console.log(e)
     }
-
-
 
     await getNextMail(hostAMailAddress).then(mail => {
         hostAMail = mail.body
@@ -199,40 +175,37 @@ test("Should attend the meeting as HR and add note", async t => {
         .typeText(Selector('input[name=login]'), "principus@roma.com")
         .typeText(Selector('input[name=password]'), "a")
         .click(Selector('button[type=submit]').withText('LOGIN'))
-        .click(Selector('button').withText('OK'))
+        .click(acceptSelector())
 
 
     await addNote({t, tags: ["interview", "hr", "minus"], note: "didn't show up"})
-
 })
 
 test("Should plan technical interview", async t => {
     await t.navigateTo(mainUrl)
-
-
     // PLAN THE DEV MEETING
 
     await loginAsHr({t})
     await openOfferAsHr({t, offerName})
     await t
-        .click(Selector('button').withText('APPLICATIONS MENU'))
-        .click(Selector('button').withText('APPLICATIONS'))
+        .click(buttonSelector('APPLICATIONS MENU'))
+        .click(buttonSelector('APPLICATIONS'))
         .click(Selector('.MuiCardContent-root').filter((el, idx) => el.textContent.includes(`${name} ${lastName}`), {
             name,
             lastName
         }))
-        .click(Selector('button').withText('NEXT STAGE'))
+        .click(buttonSelector('NEXT STAGE'))
         .typeText("input", `${hostAMailAddress},${hostBMailAddress}`)
-        .click(Selector('button').withText('OK'))
-        .click(Selector('button').withText('OK'))
+        .click(acceptSelector())
+        .click(acceptSelector())
         .click(buttonSelector('PLAN MEETING'))
-        .click(Selector('button').withText('OK'))
+        .click(acceptSelector())
         .click('svg')
-        .click(Selector('button').withText('Next'))
-        .click(Selector('button').withText('Next'))
+        .click(nextSelector())
+        .click(nextSelector())
         .typeText(Selector('input'), '20')
-        .click(Selector('button').withText('Next'))
-        .click(Selector('button').withText('OK'))
+        .click(nextSelector())
+        .click(acceptSelector())
 
     try {
         // HOSTS SHOULD GET EMAILS
@@ -257,16 +230,16 @@ test("Should assign dev to set tasks", async t => {
     await loginAsHr({t})
     await openOfferAsHr({t, offerName})
     await t
-        .click(Selector('button').withText('APPLICATIONS MENU'))
-        .click(Selector('button').withText('APPLICATIONS'))
+        .click(buttonSelector('APPLICATIONS MENU'))
+        .click(buttonSelector('APPLICATIONS'))
         .click(Selector('.MuiCardContent-root').filter(el => el.textContent.includes(`${name} ${lastName}`), {
             name,
             lastName
         }))
-        .click(Selector('button').withText('NEXT STAGE'))
+        .click(buttonSelector('NEXT STAGE'))
         .typeText("input", `${hostAMailAddress}`)
-        .click(Selector('button').withText('OK'))
-        .click(Selector('button').withText('OK'))
+        .click(acceptSelector())
+        .click(acceptSelector())
 
     await logout(t)
 
@@ -284,7 +257,7 @@ test("Should assign tasks", async t => {
     await t.typeText("input", password).click(buttonSelector('GO'))
 
     //ADD TASK
-    // await addNewTask({t, description: "nn3", tests: [{input: "1", output: "1"}, {input: "12", output: "12"}], timeLimit: "12"});
+    await addNewTask({t, description: "test task", tests: [{input: "1", output: "1"}, {input: "12", output: "12"}], timeLimit: "12"});
 
     await t
         .click(Selector(".MuiListItem-button").withText("Assign Task"))
@@ -294,17 +267,19 @@ test("Should assign tasks", async t => {
         }).nth(-1))
 
     await t
-        .click(Selector('button').withText("ASSIGN TASK"))
+        .click(buttonSelector("ASSIGN TASK"))
         .click(Selector('.MuiPaper-root.MuiCard-root').find("svg"))
-        .click(Selector('button').withExactText("ASSIGN"))
+        .click(buttonSelector("ASSIGN"))
         .click(acceptSelector())
-    await t.click(Selector('button').withText('JOB DONE!'))
+    await t.doubleClick(buttonSelector('JOB DONE'))
+
+    await t.wait(100)
 
     await addNote({t, tags: ["dev", "cv", "plus"], note: "Nice cv", mail: hostAMailAddress})
 
     await getNextMail(guestMailAddress).then(mail => {
         guestMail = mail.body
-        guestUrl = guestMail.split('at: ')[1].split('.\n')[0].trim()
+        guestUrl = guestMail.split('at: ')[1].replace(/\s+/g, '').split('.All')[0].trim()
     })
 })
 
@@ -313,19 +288,23 @@ test("Should attempt to solve a task", async t => {
 
     //AT TASK
     await solveTask({t, code})
+    await t.wait(10000)
     await refresh()
 
     hostAMail = await getNextMail(hostAMailAddress).then(mail => {
         hostAMail = mail.body
-        hostAUrl = hostAMailAddress.split('at: ')[1].split('.\n')[0].trim()
+        hostAUrl = hostAMail.split('at: ')[1].replace(/\s+/g, '').split('.Password')[0].trim()
+        password = hostAMail.split("is:")[1].trim().split("\n")[0].trim()
     })
 })
 
 test("Should review the task", async t => {
     await t.navigateTo(hostAUrl)
+
+    await t.typeText("input", password).click(buttonSelector('GO'))
+    await t.wait(2000)
     //AS DEV
-    await addNote(t, ["dev", "task", "minus"], "not fancy")
-    await addNote(t, ["dev", "task", "neutral"], "python")
+    await addNote({t, tags: ["dev", "task", "minus"], note: "not fancy", mail: hostAMailAddress})
 })
 
 test("Should accept the candidate", async t => {
@@ -335,9 +314,9 @@ test("Should accept the candidate", async t => {
     await loginAsHr({t})
     await openOfferAsHr({t, offerName})
     await t
-        .click(Selector('button').withText('APPLICATIONS MENU'))
-        .click(Selector('button').withText('APPLICATIONS'))
+        .click(buttonSelector('APPLICATIONS MENU'))
+        .click(buttonSelector('APPLICATIONS'))
         .click(Selector('.MuiCardContent-root').filter((el, idx) => el.textContent.includes(`${name} ${lastName}`), {name, lastName}))
-        .click(Selector('button').withText('ACCEPT CANDIDATE'))
-        .click(Selector('button').withText('OK'))
+        .click(buttonSelector('ACCEPT CANDIDATE'))
+        .click(buttonSelector('OK'))
 })

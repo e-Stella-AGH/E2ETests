@@ -4,6 +4,7 @@ let apiKey
 let mailslurp
 let inboxes
 global.FormData = require('form-data');
+require('dotenv').config();
 
 const startServiceIfNeeded = async () => {
     if (!apiKey && !mailslurp && !inboxes) await startService()
@@ -37,19 +38,11 @@ export const getHostBEmailAddress = async () => {
 export const getNextMail = async (address) =>{
     await startServiceIfNeeded();
     const inbox = Object.values(inboxes).filter(inbox => inbox.emailAddress === address)[0]
-    try {
-        const mail = await mailslurp.waitController.waitForLatestEmail({
-            inboxId: inbox.id,
-            timeout: 30000,
-            unreadOnly: true
-        })
-        // console.log(mail)
-        console.log(mail.headers.Subject)
-        return mail
-    } catch (e) {
-        console.log(e.statusText)
-    }
-
+    return await mailslurp.waitController.waitForLatestEmail({
+        inboxId: inbox.id,
+        timeout: 30000,
+        unreadOnly: true
+    })
 }
 
 

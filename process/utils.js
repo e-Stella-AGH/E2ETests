@@ -90,7 +90,6 @@ export const planMeeting = async ({t, hosts, duration, hr = false}) => {
         }
     }
 
-
     await t
         .click(nextSelector())
         .click(nextSelector())
@@ -124,6 +123,7 @@ export const solveTask = async ({ t, code }) => {
         .click(buttonSelector('start'))
         .click(acceptSelector())
         .click(buttonSelector('take control'))
-        .typeText('.monaco-mouse-cursor-text', code)
+        .click('.view-line')
+        .pressKey(code.split('').join(' ').replace(/\n/g, 'enter'))
         .click(buttonSelector('submit'))
 }
