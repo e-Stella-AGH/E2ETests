@@ -1,8 +1,20 @@
 #!/bin/bash
-for d in */ ; do
-    if [ "$d" != "node_modules/" ]
+if [ $# -gt 0 ]
+then
+  for dir in "$@"; do
+    if [ "$dir" != "node_modules" ] && [ "$dir" != "commons" ]
     then
-        echo "${d}"
-        testcafe chrome "${d}index.js"
+      echo "${dir}/"
+      testcafe chromium "${dir}/index.js"
     fi
-done
+  done
+else
+  for d in */ ; do
+      if [ "$d" != "node_modules/" ] && [ "$dir" != "commons" ]
+      then
+          echo "${d}"
+          testcafe chromium "${d}index.js"
+      fi
+  done
+fi
+

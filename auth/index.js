@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 import { uuid } from 'uuidv4';
-import { loginAsHr, loginAsUser, logout, regiesterJobSeeker } from './logins';
+import { loginAsHr, loginAsUser, logout, registerJobSeeker } from './logins';
 
 
 fixture `login tests`
@@ -8,8 +8,6 @@ fixture `login tests`
 
 test("HR log in test", async t => {
     await loginAsHr({ t })
-
-    await t.click(Selector('button').withText('OK'))
 
     await logout(t)
 
@@ -19,7 +17,7 @@ const randomJobSeekerLogin = `${uuid()}@interia.pl`
 const randomJobSeekerPassword = uuid()
 
 test("Register job seeker - user wasn't logged in", async t => {
-    await regiesterJobSeeker({ t, login: randomJobSeekerLogin, password: randomJobSeekerPassword })
+    await registerJobSeeker({ t, login: randomJobSeekerLogin, password: randomJobSeekerPassword })
 
     await t.expect(Selector('h2').withText('Successfully registered!').exists).ok()
 
@@ -34,7 +32,7 @@ test("Register job seeker - user wasn't logged in", async t => {
 })
 
 test("Register job seeker - user was already registered", async t => {
-    await regiesterJobSeeker({ t, login: randomJobSeekerLogin, password: randomJobSeekerPassword })
+    await registerJobSeeker({ t, login: randomJobSeekerLogin, password: randomJobSeekerPassword })
 
     await t.expect(Selector('h2').withText(`We couldn't register you!`).exists).ok()
 

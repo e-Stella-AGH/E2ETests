@@ -18,8 +18,14 @@
   },
   "homepage": "https://github.com/Davenury/TestCafeTest#readme",
   "dependencies": {
+    "callsite-record": "^4.1.3",
     "dotenv": "^10.0.0",
     "testcafe": "^1.17.0",
     "uuidv4": "^6.2.12"
+  },
+  "devDependencies": {
+    "form-data": "^4.0.0",
+    "mailslurp": "^0.0.1-security",
+    "mailslurp-client": "^15.0.2"
   }
 }

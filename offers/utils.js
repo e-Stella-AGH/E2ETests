@@ -24,7 +24,7 @@ export const addOffer = async ({ t, name = "Sample offer from tests", position =
         .click(Selector('button').withText('OK'))
 }
 
-export const openOffer = async ({t, offerName}) => {
+export const openOfferAsHr = async ({t, offerName}) => {
     await t
         .click(Selector('.MuiAvatar-root'))
         .click(Selector('.MuiListItem-root').withText('My offers'))
@@ -40,3 +40,15 @@ export const deleteOffer = async ({ t }) => {
         //close swal - shouldn't we ask about being sure?
         .click(Selector('button').withText('Ok'))
 }
+
+export const applyForOffer = async({ t, firstName, lastName, email}) => {
+    await t
+        .click(Selector('button').withText('APPLY'))
+        .typeText(Selector('label').withText('Name').parent().find('input'), firstName)
+        .typeText(Selector('label').withText('Surname').parent().find('input'), lastName)
+        .typeText(Selector('label').withText('E-mail address').parent().find('input'), email)
+        .click(Selector('button').withText("APPLY"))
+        .click(Selector('button').withText('OK'))
+}
+
+
